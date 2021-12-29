@@ -25,5 +25,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UsersError(error: e.toString()));
       }
     });
+    on<SearchUsersEvent>((event, emit) async {
+      emit(UsersLoading());
+      try {
+        final List<User> users = await UserRepository().searchUsersByName(event.query);
+        emit(UsersLoaded(users: users));
+      } catch (e) {
+        emit(UsersError(error: e.toString()));
+      }
+    });
   }
 }

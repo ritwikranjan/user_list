@@ -62,4 +62,25 @@ class DatabaseProvider {
       );
     });
   }
+
+  //search user from database by name
+  Future<List<User>> searchUsersByName(String name) async {
+    if (kDebugMode) {
+      print('searching user from local database');
+    }
+    Database? db = await database;
+
+    // SQLite Query to fetch data from User table ordered by name in ascending order
+    final List<Map<String, dynamic>> maps =
+        await db!.query('User', where: 'name LIKE ?', whereArgs: ['%$name%'], orderBy: 'name ASC');
+
+    // Convert the List<Map<String, dynamic> into a List<User>.
+    return List.generate(maps.length, (i) {
+      return User(
+        id: maps[i]['id'],
+        name: maps[i]['name'],
+        email: maps[i]['email'],
+      );
+    });
+  }
 }

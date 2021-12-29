@@ -31,13 +31,33 @@ class UserScreen extends StatelessWidget {
             }
             if (state is UsersLoaded) {
               return ListView.builder(
+                physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          labelText: 'Search',
+                          prefixIcon: const Icon(Icons.search),
+                          hintText: 'Search for a user',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          BlocProvider.of<UserBloc>(context).add(SearchUsersEvent(value));
+                        },
+                      ),
+                    );
+                  }
                   return ListTile(
-                    title: Text(state.users[index].name),
-                    subtitle: Text(state.users[index].email),
+                    title: Text(state.users[index - 1].name),
+                    subtitle: Text(state.users[index - 1].email),
                   );
                 },
-                itemCount: state.users.length,
+                itemCount: state.users.length + 1,
               );
             }
             if (state is UsersLoading) {

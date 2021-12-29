@@ -22,4 +22,12 @@ class UserRepository {
     }
     return await _databaseProvider.getUsers();
   }
+
+  Future<List<User>> searchUsersByName(String name) async {
+    if (name.isEmpty) {
+      return await getUsersFromDb();
+    }
+    final List<User> users = await _databaseProvider.searchUsersByName(name);
+    return users;
+  }
 }
